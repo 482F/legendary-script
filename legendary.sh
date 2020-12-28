@@ -43,7 +43,7 @@ reauth(){
     cmd.exe /c "${WINDOWS_LEGENDARY_DIR}/auth.bat"
 }
 
-case "${1}" in
+case "${1:-}" in
 reauth)
     result="$(reauth)"
     ;;
