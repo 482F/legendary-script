@@ -33,9 +33,10 @@ main(){
                 break
             fi
             result="$(echo "${result}" | sed -e "s@${appname}@${alias}@g")"
+            result="$(echo "${result}" | sed -e "s@App name: \(${alias}\) | Ver@App name: \\\\e[31m\1\\\\e[39m | Ver@g")"
         done < "${ALIAS_TXT_PATH}"
     fi
-    echo "${result}" | sed -e "s@App name: \(.*\) | Ver@App name: \\\\e[31m\1\\\\e[39m | Ver@g"
+    echo "${result}"
 }
 
 reauth(){
