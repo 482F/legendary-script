@@ -26,6 +26,31 @@ main(){
     local result="$(cmd.exe /c "${WINDOWS_LEGENDARY_PATH}" ${args})"
 
     if echo "${args}" | grep -E "list-games|list-installed|list-files|list-saves"; then
+        max_length=0
+        while read line; do
+            if [ "${max_length}" -lt "${#line}" ]; then
+                max_length="${#line}"
+            fi
+        done < <(echo "${result}" | sed -ne "s@^ \*@@p" | sed -e "s@(App name:.*@@g")
+        aligned_result=""
+        while read line; do
+            if echo "${line}" | grep -qP "^\*"; then
+                app_name="$(echo "${line}" | sed -e "s@(App name:.*@@g")"
+                if [ "${app_name}" = "" ]; then
+                    app_name="$(echo "${line}" | grep -oP "^\* .*")"
+                fi
+                length="${#app_name}"
+                filling="$(printf %$((max_length-length+5))s)"
+                leftover="$(echo "${line}" | grep -oP "\(App name:.*")"
+                aligned_result="${aligned_result}\n ${app_name}${filling}${leftover}"
+            elif echo "${line}" | grep -qP "^(\+|\-\>)"; then
+                filling="$(printf %$((max_length+10))s)"
+                aligned_result="${aligned_result}\n${filling}${line}"
+            else
+                aligned_result="${aligned_result}\n${line}"
+            fi
+        done < <(echo "${result}")
+        result="${aligned_result}"
         while read line; do
             appname="${line%%,*}"
             alias="${line#*,}"
