@@ -4,12 +4,13 @@ set -ue -o pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$(readlink "${0}")")"; pwd)"
 
-LEGENDARY_PATH="/mnt/e/Fgame/legendary/legendary.exe"
-WINDOWS_LEGENDARY_PATH="$(wslpath -m "/mnt/e/Fgame/legendary/legendary.exe")"
+LEGENDARY_DIR="/mnt/e/Fgame/legendary"
+LEGENDARY_PATH="${LEGENDARY_DIR}/legendary.exe"
+WINDOWS_LEGENDARY_PATH="$(wslpath -m "${LEGENDARY_PATH}")"
 ALIAS_TXT_PATH="${SCRIPT_DIR}/alias.txt"
 
 
-cd "$(dirname ${LEGENDARY_PATH})"
+cd "${LEGENDARY_DIR}"
 
 args="${@}"
 
