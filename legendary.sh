@@ -23,9 +23,8 @@ while read line; do
 done < "${ALIAS_TXT_PATH}"
 
 main(){
-    local result="$(cmd.exe /c "${WINDOWS_LEGENDARY_PATH}" ${args})"
-
     if echo "${args}" | grep -E "list-games|list-installed|list-files|list-saves"; then
+        local result="$(cmd.exe /c "${WINDOWS_LEGENDARY_PATH}" ${args})"
         max_length=0
         while read line; do
             if [ "${max_length}" -lt "${#line}" ]; then
@@ -60,8 +59,11 @@ main(){
             result="$(echo "${result}" | sed -e "s@${appname}@${alias}@g")"
             result="$(echo "${result}" | sed -e "s@App name: \(${alias}\) | Ver@App name: \\\\e[31m\1\\\\e[39m | Ver@g")"
         done < "${ALIAS_TXT_PATH}"
+    else
+        local result=""
+        cmd.exe /c "${WINDOWS_LEGENDARY_PATH}" ${args}
     fi
-    echo "${result}"
+    echo -e "${result}"
 }
 
 reauth(){
@@ -70,10 +72,8 @@ reauth(){
 
 case "${1:-}" in
 reauth)
-    result="$(reauth)"
+    reauth
     ;;
 *)
-    result="$(main "${args}")"
+    main "${args}"
 esac
-
-echo -e "${result}"
